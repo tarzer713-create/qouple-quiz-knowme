@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รู้จักกันแค่ไหน — เกมคู่รัก</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button id="sound-toggle" type="button" aria-label="เปิด/ปิดเสียง" title="เปิด/ปิดเสียง">🔊</button>
+<div id="ambient-layer"></div>
+<div class="burst-layer" id="burst-layer"></div>
+
+<div class="stage">
+  <div class="frame">
+
+    <!-- INTRO -->
+    <section id="screen-intro" class="enter">
+      <div class="intro-wrap">
+        <p class="eyebrow">✦ เกมคู่รัก ✦</p>
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="แตะเพื่อเปิดจดหมาย">
+          <div class="envelope-body"></div>
+          <div class="envelope-shadow"></div>
+          <span class="envelope-heart">💗</span>
+          <div class="envelope-flap"></div>
+        </div>
+        <h1>รู้จักกันแค่ไหน?</h1>
+        <p class="sub">จดหมายรักฉบับนี้ซ่อนคำถามเอาไว้<br>แตะเพื่อเปิดแล้วมาลองดูว่าเราเข้าใจกันแค่ไหน</p>
+        <p class="envelope-hint">👆 แตะที่ซองจดหมาย</p>
+      </div>
+    </section>
+
+    <!-- START -->
+    <section id="screen-start" class="hidden">
+      <p class="eyebrow">✦ เกมคู่รัก ✦</p>
+      <h1>รู้จักกันแค่ไหน?</h1>
+      <p class="sub">สลับกันเป็น "เจ้าของคำตอบ" แล้วให้อีกฝ่ายทาย<br>ตอบถูกได้แต้ม มาดูกันว่าใครรู้จักใครดีกว่า</p>
+
+      <label for="name1">ชื่อคนที่ 1</label>
+      <input type="text" id="name1" placeholder="เช่น พลอย" maxlength="20">
+
+      <label for="name2">ชื่อคนที่ 2</label>
+      <input type="text" id="name2" placeholder="เช่น กล้า" maxlength="20">
+
+      <button class="btn" id="btn-start">เริ่มเกม</button>
+    </section>
+
+    <!-- HANDOFF -->
+    <section id="screen-handoff" class="hidden">
+      <div class="handoff">
+        <span class="heart">💌</span>
+        <p id="handoff-text"></p>
+        <button class="btn" id="btn-handoff-continue">พร้อมแล้ว</button>
+      </div>
+    </section>
+
+    <!-- SUBJECT ANSWERS -->
+    <section id="screen-subject" class="hidden">
+      <div class="progress" id="progress-subject"></div>
+      <div class="streak" id="streak-subject"></div>
+      <p class="role-badge">คำตอบจริงของ <b id="subject-name"></b></p>
+      <p class="question" id="subject-question"></p>
+      <div class="options" id="subject-options"></div>
+    </section>
+
+    <!-- GUESSER GUESSES -->
+    <section id="screen-guess" class="hidden">
+      <div class="progress" id="progress-guess"></div>
+      <div class="streak" id="streak-guess"></div>
+      <p class="role-badge"><b id="guesser-name"></b> ทายคำตอบของ <b id="subject-name-2"></b></p>
+      <p class="question" id="guess-question"></p>
+      <div class="options" id="guess-options"></div>
+    </section>
+
+    <!-- REVEAL -->
+    <section id="screen-reveal" class="hidden">
+      <p class="question" id="reveal-question"></p>
+      <div class="reveal-box" id="reveal-box">
+        <div class="row">คำตอบจริงของ <b id="reveal-subject-name"></b>: <b id="reveal-true-ans"></b></div>
+        <div class="row"><b id="reveal-guesser-name"></b> ทายว่า: <b id="reveal-guess-ans"></b></div>
+        <div class="verdict" id="reveal-verdict"></div>
+      </div>
+      <button class="btn" id="btn-next">ข้อต่อไป</button>
+    </section>
+
+    <!-- END -->
+    <section id="screen-end" class="hidden">
+      <p class="eyebrow">✦ ผลลัพธ์ ✦</p>
+
+      <svg class="heart-meter" viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="heartClip">
+            <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.5-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+          </clipPath>
+        </defs>
+        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.5-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" fill="var(--bg-deep)" stroke="var(--gold-dim)" stroke-width="0.4"/>
+        <rect id="meterFill" x="0" y="29.6" width="32" height="0" fill="var(--rose)" clip-path="url(#heartClip)"/>
+        <text x="16" y="17" class="pct-label" id="meterPct"></text>
+      </svg>
+
+      <div class="score-summary">
+        <div class="score-pair">
+          <div class="score-card">
+            <div class="name" id="end-name1"></div>
+            <div class="val" id="end-score1"></div>
+            <div class="sub2">ทายถูกกี่ข้อ</div>
+          </div>
+          <div class="score-card">
+            <div class="name" id="end-name2"></div>
+            <div class="val" id="end-score2"></div>
+            <div class="sub2">ทายถูกกี่ข้อ</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="result-msg" id="result-msg"></p>
+      <p class="result-detail" id="result-detail"></p>
+
+      <div class="quote-card">
+        <p class="quote-text" id="quote-text"></p>
+        <button class="quote-reroll" id="btn-reroll-quote">↻ เปลี่ยนคำคม</button>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn ghost small" id="btn-copy">📋 คัดลอกผลลัพธ์</button>
+        <span class="copy-feedback" id="copy-feedback"></span>
+      </div>
+
+      <button class="btn" id="btn-restart">เล่นอีกครั้ง</button>
+      <button class="btn ghost" id="btn-restart-names">เปลี่ยนชื่อแล้วเล่นใหม่</button>
+    </section>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
